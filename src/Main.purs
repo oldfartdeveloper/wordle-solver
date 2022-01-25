@@ -4,7 +4,7 @@ import Prelude
 
 import Data.Array (all, filter)
 import Data.CodePoint.Unicode (isAsciiLower)
-import Data.String (joinWith, length)
+import Data.String (joinWith, length, toUpper)
 import Data.String.CodePoints (toCodePointArray)
 import Data.String.Utils (lines)
 import Effect (Effect)
@@ -15,7 +15,7 @@ main :: Effect Unit
 main = do
   str <- readTextFile ASCII "doc/words.txt"
   writeTextFile ASCII "doc/words5.txt" $
-    joinWith "\n" (filter only5CharLowerCase (lines str))
+    joinWith "\n" $ map toUpper $ (filter only5CharLowerCase (lines str))
 
 only5CharLowerCase :: String -> Boolean
 only5CharLowerCase word =
