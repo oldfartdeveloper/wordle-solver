@@ -4,10 +4,11 @@ import Prelude
 
 import Data.Array (all, filter, nub)
 import Data.CodePoint.Unicode (isAsciiLower, isLetter)
-import Data.Foldable (foldl)
-import Data.String (joinWith, toCodePointArray)
+import Data.Foldable (any, foldl)
+import Data.String (joinWith, singleton, toCodePointArray)
 import Data.String.CodePoints (CodePoint, fromCodePointArray, toCodePointArray)
-import Data.String.CodeUnits (toCharArray)
+import Data.String.CodeUnits (contains, toCharArray)
+import Data.String.Pattern (Pattern(Pattern))
 import Data.String.Utils (lines)
 import Effect (Effect)
 import Effect.Class.Console (log)
@@ -47,7 +48,7 @@ main = do
 
 play :: Array String -> String
 play words =
-  fromCodePointArray letters
+  fromCodePointArray $ unusedLetters letters attempts
 
 -- What are the letters that are not used in the answer?
 unusedLetters :: Array CodePoint -> Array String -> Array CodePoint
@@ -56,5 +57,5 @@ unusedLetters used atts =
 
 onlyUnused :: CodePoint -> Boolean
 onlyUnused cp =
-  false
+  not $ contains (Pattern $ singleton cp) $ fromCodePointArray letters
 
