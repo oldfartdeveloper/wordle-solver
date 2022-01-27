@@ -5,7 +5,7 @@ import Prelude
 import Data.Array (all, filter, mapWithIndex, nub)
 import Data.Char.Utils (toCodePoint)
 import Data.CodePoint.Unicode (isAsciiLower, isLetter)
-import Data.Foldable (any, foldl)
+import Data.Foldable (any, elem, foldl, null)
 import Data.String (joinWith, singleton)
 import Data.String.CodePoints (CodePoint, codePointAt, codePointFromChar, fromCodePointArray, indexOf, toCodePointArray)
 import Data.String.CodeUnits (contains, toCharArray)
@@ -17,11 +17,8 @@ import Effect.Class.Console (log)
 import Node.Encoding (Encoding(ASCII))
 import Node.FS.Sync (readTextFile, writeTextFile)
 
-unknownPosition :: Char
-unknownPosition = '.'
-
 lettersInPosition :: String
-lettersInPosition = ".U..."
+lettersInPosition = "..A.."
 
 lettersInPositionInternal :: Array (Tuple Int CodePoint)
 lettersInPositionInternal = mapWithIndex convert $ toCharArray lettersInPosition
@@ -35,15 +32,13 @@ attempts =
   [ "ATONE"
   , "BUILD"
   , "CRYPT"
-  , ""
+  , "SCAMS"
   , ""
   ]
 
 -- Letters used but whose position in the answer isn't yet known.
 lettersUsed :: Array CodePoint
-lettersUsed = toCodePointArray "AR"
-
--- Calculated letters used, both whose position is known
+lettersUsed = toCodePointArray "C" -- Calculated letters used, both whose position is known
 -- and whose position is not known.
 letters :: Array CodePoint
 letters =
@@ -56,7 +51,22 @@ main = do
 
 play :: Array String -> String
 play words =
-  fromCodePointArray $ unusedLetters letters attempts
+  -- filter (\w -> not $ hasAnyUnused w && hasAllInPosition w) words
+  joinWith "\n" $
+    filter (\word ->
+              let
+                cps = toCodePointArray word
+              in
+              not $ hasAnyUnused cps && hasAllInPosition cps
+           ) words
+
+
+hasAnyUnused :: Array CodePoint -> Boolean
+hasAnyUnused cps =
+  not $ null $ filter (\cp -> elem cp $ unusedLetters lettersUsed attempts) cps
+
+hasAllInPosition :: Array CodePoint -> Boolean
+hasAllInPosition cps = true -- TODO
 
 -- What are the letters that are not used in the answer?
 unusedLetters :: Array CodePoint -> Array String -> Array CodePoint
@@ -65,4 +75,4 @@ unusedLetters used atts =
 
 onlyUnused :: CodePoint -> Boolean
 onlyUnused cp =
-  not $ contains (Pattern $ singleton cp) $ fromCodePointArray letters
+  not $ elem cp letters
