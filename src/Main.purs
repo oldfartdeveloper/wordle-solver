@@ -17,6 +17,7 @@ import Effect.Class.Console (log)
 import Node.Encoding (Encoding(ASCII))
 import Node.FS.Sync (readTextFile, writeTextFile)
 
+-- FIXIT: Positional characters aren't working
 lettersInPosition :: String
 lettersInPosition = "...NT"
 
@@ -29,16 +30,14 @@ lettersInPositionInternal = mapWithIndex convert $ toCharArray lettersInPosition
 -- Only need 5 attempts
 attempts :: Array String
 attempts =
-  [ "ATONE"
-  , "BUILD"
-  , "CRYPT"
+  [ "SPENT"
   , ""
   , ""
   ]
 
 -- Letters used but whose position in the answer isn't yet known.
 lettersUsed :: Array CodePoint
-lettersUsed = toCodePointArray "OU"
+lettersUsed = toCodePointArray ""
 
 -- Calculated letters used, both whose position is known
 -- and whose position is not known.
