@@ -18,7 +18,7 @@ import Node.Encoding (Encoding(ASCII))
 import Node.FS.Sync (readTextFile, writeTextFile)
 
 lettersInPosition :: String
-lettersInPosition = "..A.."
+lettersInPosition = "...NT"
 
 lettersInPositionInternal :: Array (Tuple Int CodePoint)
 lettersInPositionInternal = mapWithIndex convert $ toCharArray lettersInPosition
@@ -32,13 +32,15 @@ attempts =
   [ "ATONE"
   , "BUILD"
   , "CRYPT"
-  , "SCAMS"
+  , ""
   , ""
   ]
 
 -- Letters used but whose position in the answer isn't yet known.
 lettersUsed :: Array CodePoint
-lettersUsed = toCodePointArray "C" -- Calculated letters used, both whose position is known
+lettersUsed = toCodePointArray "OU"
+
+-- Calculated letters used, both whose position is known
 -- and whose position is not known.
 letters :: Array CodePoint
 letters =
