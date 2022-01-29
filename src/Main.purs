@@ -54,34 +54,6 @@ letters =
   lettersUsed <>
     (filter (\t -> isLetter t) $ map snd $ expectedLettersInPositionT)
 
--- FIXIT: Positional characters aren't working
-lettersInPosition :: String
-lettersInPosition = "...NT"
-
-lettersInPositionInternal :: Array (Tuple Int CodePoint)
-lettersInPositionInternal = mapWithIndex convert $ toCharArray lettersInPosition
-  where
-    convert :: Int -> Char -> Tuple Int CodePoint
-    convert offset candidate = Tuple offset (codePointFromChar candidate)
-
--- Only need 5 attempts
-attempts :: Array String
-attempts =
-  [ "SPENT"
-  , ""
-  , ""
-  ]
-
--- Letters used but whose position in the answer isn't yet known.
-lettersUsed :: Array CodePoint
-lettersUsed = toCodePointArray ""
-
--- Calculated letters used, both whose position is known
--- and whose position is not known.
-letters :: Array CodePoint
-letters =
-  lettersUsed <> (filter (\t -> isLetter t) $ map snd lettersInPositionInternal)
-
 main :: Effect Unit
 main = do
   str <- readTextFile ASCII "doc/words5.txt"
