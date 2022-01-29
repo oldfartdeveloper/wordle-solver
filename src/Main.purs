@@ -8,7 +8,14 @@ import Data.CodePoint.Unicode (isAsciiLower, isLetter)
 import Data.Foldable (any, elem, foldl)
 import Data.Maybe (Maybe, fromJust)
 import Data.String (joinWith, null, singleton, trim)
-import Data.String.CodePoints (CodePoint, codePointAt, codePointFromChar, fromCodePointArray, indexOf, toCodePointArray)
+import Data.String.CodePoints
+  ( CodePoint
+  , codePointAt
+  , codePointFromChar
+  , fromCodePointArray
+  , indexOf
+  , toCodePointArray
+  )
 import Data.String.CodeUnits (contains, toCharArray)
 import Data.String.Pattern (Pattern(Pattern))
 import Data.String.Utils (lines)
@@ -32,8 +39,8 @@ lettersWithPosition :: String -> Array (Tuple Int CodePoint)
 lettersWithPosition word =
   mapWithIndex convert $ toCharArray word
   where
-    convert :: Int -> Char -> Tuple Int CodePoint
-    convert offset candidate = Tuple offset (codePointFromChar candidate)
+  convert :: Int -> Char -> Tuple Int CodePoint
+  convert offset candidate = Tuple offset (codePointFromChar candidate)
 
 -- Only need 5 attempts
 attempts :: Array String
@@ -68,18 +75,21 @@ play words =
   joinWith "\n" $
     let
       noUnused =
-        filter (\word ->
-                  not $ hasAnyUnused $ toCodePointArray word) words
+        filter
+          ( \word ->
+              not $ hasAnyUnused $ toCodePointArray word
+          )
+          words
       noUnusedAndHasAllUsed =
         filter (\word -> includesAllUsed $ toCodePointArray word) noUnused
     in
-      if expectedLettersInPosition == "....."
-      then {- noUnusedAndHasAllUsed -} noUnusedAndHasAllUsed
+      if expectedLettersInPosition == "....." then {- noUnusedAndHasAllUsed -}  noUnusedAndHasAllUsed
       else filter (\word -> hasAllInPosition word) noUnusedAndHasAllUsed
-  -- in
-    -- FIXIT!: Is not requiring unknown position letters in filter.
-    -- joinWith "\n" $ filter (\word -> hasAllInPosition word) haveUsed
-    -- haveUsed = fromCodePointArray $ unusedLetters lettersUsed attempts
+
+-- in
+-- FIXIT!: Is not requiring unknown position letters in filter.
+-- joinWith "\n" $ filter (\word -> hasAllInPosition word) haveUsed
+-- haveUsed = fromCodePointArray $ unusedLetters lettersUsed attempts
 
 haveOnlyUsed :: Array CodePoint -> Boolean
 haveOnlyUsed cps = not $ hasAnyUnused cps
@@ -93,15 +103,15 @@ hasAnyUnused cps =
 
 hasAllInPosition :: String -> Boolean
 hasAllInPosition cps =
-    all (\cpT -> verifyCharInPosition cpT) $ lettersWithPosition cps
+  all (\cpT -> verifyCharInPosition cpT) $ lettersWithPosition cps
 
 verifyCharInPosition :: Tuple Int CodePoint -> Boolean
 verifyCharInPosition actualCpT =
   let
     expectedCpT = unsafeJust $ index expectedLettersInPositionT $ fst actualCpT
   in
-  (noLetterInThisPosition == snd expectedCpT) ||
-        (lettersMatch actualCpT expectedLettersInPositionT)
+    (noLetterInThisPosition == snd expectedCpT) ||
+      (lettersMatch actualCpT expectedLettersInPositionT)
 
 lettersMatch :: Tuple Int CodePoint -> Array (Tuple Int CodePoint) -> Boolean
 lettersMatch actualChar expectedChars =
