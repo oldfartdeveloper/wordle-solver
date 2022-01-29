@@ -5,9 +5,9 @@ import Prelude
 import Data.Array (all, filter, index, mapWithIndex, nub)
 import Data.Char.Utils (toCodePoint)
 import Data.CodePoint.Unicode (isAsciiLower, isLetter)
-import Data.Foldable (any, elem, foldl, null)
+import Data.Foldable (any, elem, foldl)
 import Data.Maybe (Maybe, fromJust)
-import Data.String (joinWith, singleton)
+import Data.String (joinWith, null, singleton, trim)
 import Data.String.CodePoints (CodePoint, codePointAt, codePointFromChar, fromCodePointArray, indexOf, toCodePointArray)
 import Data.String.CodeUnits (contains, toCharArray)
 import Data.String.Pattern (Pattern(Pattern))
@@ -38,10 +38,12 @@ lettersWithPosition word =
 -- Only need 5 attempts
 attempts :: Array String
 attempts =
-  [ "ATONE"
-  , "BUILD"
-  , "CRYPT"
-  ]
+  filter (not null) $ map trim $ lines
+    """
+    ATONE
+    BUILD
+    CRYPT
+    """
 
 -- Letters used but whose position in the answer isn't yet known.
 lettersUsed :: Array CodePoint
