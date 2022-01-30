@@ -3,43 +3,36 @@ module Main where
 import Prelude
 
 import Data.Array (all, filter, index, mapWithIndex, nub)
-import Data.CodePoint.Unicode (isAsciiLower, isLetter)
-import Data.Foldable (any, elem, foldl)
+import Data.CodePoint.Unicode (isLetter)
+import Data.Foldable (any, elem)
 import Data.Maybe (Maybe, fromJust)
-import Data.String (joinWith, null, singleton, trim)
+import Data.String (joinWith, null, trim)
 import Data.String.CodePoints
   ( CodePoint
-  , codePointAt
   , codePointFromChar
-  , fromCodePointArray
-  , indexOf
   , toCodePointArray
   )
-import Data.String.CodeUnits (contains, toCharArray)
-import Data.String.Pattern (Pattern(Pattern))
+import Data.String.CodeUnits (toCharArray)
 import Data.String.Utils (lines)
 import Data.Tuple (Tuple(Tuple), fst, snd)
 import Effect (Effect)
 import Effect.Class.Console (log)
 import Node.Encoding (Encoding(ASCII))
-import Node.FS.Sync (readTextFile, writeTextFile)
+import Node.FS.Sync (readTextFile)
 import Partial.Unsafe (unsafePartial)
 
 noLetterInThisPosition :: CodePoint
 noLetterInThisPosition = codePointFromChar '.'
 
 expectedLettersInPosition :: String
-expectedLettersInPosition = ".R.N."
+expectedLettersInPosition = "...NT"
 
 expectedLettersInPositionT :: Array (Tuple Int CodePoint)
 expectedLettersInPositionT = lettersWithPosition expectedLettersInPosition
 
 lettersWithPosition :: String -> Array (Tuple Int CodePoint)
 lettersWithPosition word =
-  mapWithIndex convert $ toCharArray word
-  where
-  convert :: Int -> Char -> Tuple Int CodePoint
-  convert offset candidate = Tuple offset (codePointFromChar candidate)
+  mapWithIndex (\i c -> Tuple i $ codePointFromChar c) $ toCharArray word
 
 -- Only need 5 attempts
 attempts :: Array String
@@ -49,6 +42,8 @@ attempts =
     ATONE
     BUILD
     CRYPT
+    FOUNT
+    MOUNT
     """
 
 -- Letters used but whose position in the answer isn't yet known.
@@ -56,10 +51,9 @@ attempts =
 lettersUsedWithPositions :: Array (Tuple Int CodePoint)
 lettersUsedWithPositions =
   map adjustLetterUsed
-    [  Tuple 2 'U'
-    -- , Tuple 4 'P'
-    -- , Tuple 2 'R'
-    -- , Tuple 3 'Y'
+    [ Tuple 2 'U'
+    , Tuple 2 'T'
+    , Tuple 3 'O'
     ]
 
 -- Convert position from position to offset
@@ -84,8 +78,6 @@ main = do
   str <- readTextFile ASCII "doc/words5.txt"
   log $ play $ lines str
 
--- FIXIT: screen out words that have any letter matching the position
--- of their used (but not same position).
 play :: Array String -> String
 play words =
   joinWith "\n" $
@@ -112,7 +104,7 @@ includesAllUsed tcps =
 
 hasAnyUnused :: Array CodePoint -> Boolean
 hasAnyUnused cps =
-  any (\cp -> elem cp $ unusedLetters lettersUsed attempts) cps
+  any (\cp -> elem cp $ unusedLetters attempts) cps
 
 hasAllInPosition :: String -> Boolean
 hasAllInPosition cps =
@@ -131,8 +123,8 @@ lettersMatch actualChar expectedChars =
   actualChar == unsafeJust (index expectedChars $ fst actualChar)
 
 -- What are the letters that are not used in the answer?
-unusedLetters :: Array CodePoint -> Array String -> Array CodePoint
-unusedLetters used atts =
+unusedLetters :: Array String -> Array CodePoint
+unusedLetters atts =
   filter onlyUnused $ nub $ toCodePointArray $ joinWith "" atts
 
 onlyUnused :: CodePoint -> Boolean
