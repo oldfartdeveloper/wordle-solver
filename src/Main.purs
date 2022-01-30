@@ -7,11 +7,7 @@ import Data.CodePoint.Unicode (isLetter)
 import Data.Foldable (any, elem)
 import Data.Maybe (Maybe, fromJust)
 import Data.String (joinWith, null, trim)
-import Data.String.CodePoints
-  ( CodePoint
-  , codePointFromChar
-  , toCodePointArray
-  )
+import Data.String.CodePoints (CodePoint, codePointFromChar, toCodePointArray)
 import Data.String.CodeUnits (toCharArray)
 import Data.String.Utils (lines)
 import Data.Tuple (Tuple(Tuple), fst, snd)
@@ -43,7 +39,6 @@ attempts =
     BUILD
     CRYPT
     FOUNT
-    MOUNT
     """
 
 -- Letters used but whose position in the answer isn't yet known.
@@ -91,8 +86,7 @@ play words =
       noUnusedAndHasAllUsed =
         filter (\word -> includesAllUsed $ lettersWithPosition word) noUnused
     in
-      if expectedLettersInPosition == "....."
-      then noUnusedAndHasAllUsed
+      if expectedLettersInPosition == "....." then noUnusedAndHasAllUsed
       else filter (\word -> hasAllInPosition word) noUnusedAndHasAllUsed
 
 haveOnlyUsed :: Array CodePoint -> Boolean
