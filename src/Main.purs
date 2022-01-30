@@ -3,7 +3,6 @@ module Main where
 import Prelude
 
 import Data.Array (all, filter, index, mapWithIndex, nub)
-import Data.Char.Utils (toCodePoint)
 import Data.CodePoint.Unicode (isAsciiLower, isLetter)
 import Data.Foldable (any, elem, foldl)
 import Data.Maybe (Maybe, fromJust)
@@ -53,8 +52,25 @@ attempts =
     """
 
 -- Letters used but whose position in the answer isn't yet known.
+-- The position specfied indicates that it specifically can't be that one.
+lettersUsedWithPositions :: Array (Tuple Int CodePoint)
+lettersUsedWithPositions =
+  map adjustLetterUsed
+    [ Tuple 5 'E'
+    , Tuple 4 'P'
+    , Tuple 2 'R'
+    , Tuple 3 'Y'
+    ]
+
+-- Convert position from position to offset
+-- and letter from char to code point
+adjustLetterUsed :: Tuple Int Char -> Tuple Int CodePoint
+adjustLetterUsed t =
+  Tuple ((-1) + (fst t)) (codePointFromChar $ snd t)
+
 lettersUsed :: Array CodePoint
-lettersUsed = toCodePointArray "EPRY"
+lettersUsed =
+  map (\t -> snd t) lettersUsedWithPositions
 
 -- Calculated letters used, both whose position is known
 -- and whose position is not known.
