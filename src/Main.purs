@@ -21,7 +21,7 @@ noLetterInThisPosition :: CodePoint
 noLetterInThisPosition = codePointFromChar '.'
 
 expectedLettersInPosition :: String
-expectedLettersInPosition = "...NT"
+expectedLettersInPosition = "....."
 
 expectedLettersInPositionT :: Array (Tuple Int CodePoint)
 expectedLettersInPositionT = lettersWithPosition expectedLettersInPosition
@@ -34,10 +34,6 @@ attempts :: Array String
 attempts =
   filter (not null) $ map trim $ lines
     """
-    ATONE
-    BUILD
-    CRYPT
-    FOUNT
     """
 
 -- Letters used but whose position in the answer isn't yet known.
@@ -45,9 +41,8 @@ attempts =
 lettersUsedWithPositions :: Array (Tuple Int CodePoint)
 lettersUsedWithPositions =
   map adjustLetterUsed
-    [ Tuple 2 'U'
-    , Tuple 2 'T'
-    , Tuple 3 'O'
+    [ -- Tuple 2 'U'
+    -- , Tuple 2 'W'
     ]
 
 -- Convert position from position to offset
