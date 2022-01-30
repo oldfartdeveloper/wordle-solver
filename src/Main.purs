@@ -99,7 +99,8 @@ play words =
       noUnusedAndHasAllUsed =
         filter (\word -> includesAllUsed $ lettersWithPosition word) noUnused
     in
-      if expectedLettersInPosition == "....." then {- noUnusedAndHasAllUsed -}  noUnusedAndHasAllUsed
+      if expectedLettersInPosition == "....."
+      then noUnusedAndHasAllUsed
       else filter (\word -> hasAllInPosition word) noUnusedAndHasAllUsed
 
 haveOnlyUsed :: Array CodePoint -> Boolean
