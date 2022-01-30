@@ -30,7 +30,6 @@ lettersWithPosition :: String -> Array (Tuple Int CodePoint)
 lettersWithPosition word =
   mapWithIndex (\i c -> Tuple i $ codePointFromChar c) $ toCharArray word
 
--- Only need 5 attempts
 attempts :: Array String
 attempts =
   filter (not null) $ map trim $ lines
