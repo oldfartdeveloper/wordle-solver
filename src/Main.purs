@@ -102,17 +102,12 @@ play words =
       if expectedLettersInPosition == "....." then {- noUnusedAndHasAllUsed -}  noUnusedAndHasAllUsed
       else filter (\word -> hasAllInPosition word) noUnusedAndHasAllUsed
 
--- in
--- FIXIT!: Is not requiring unknown position letters in filter.
--- joinWith "\n" $ filter (\word -> hasAllInPosition word) haveUsed
--- haveUsed = fromCodePointArray $ unusedLetters lettersUsed attempts
-
 haveOnlyUsed :: Array CodePoint -> Boolean
 haveOnlyUsed cps = not $ hasAnyUnused cps
 
 includesAllUsed :: Array (Tuple Int CodePoint) -> Boolean
 includesAllUsed tcps =
-  all (\lp -> (elem (snd lp) (map snd tcps)) && (not $ elem lp tcps)) lettersUsedWithPositions
+  all (\lp -> elem (snd lp) (map snd tcps) && (not $ elem lp tcps)) lettersUsedWithPositions
 
 hasAnyUnused :: Array CodePoint -> Boolean
 hasAnyUnused cps =
