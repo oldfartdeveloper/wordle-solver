@@ -97,7 +97,7 @@ play words =
           )
           words
       noUnusedAndHasAllUsed =
-        filter (\word -> includesAllUsed $ toCodePointArray word) noUnused
+        filter (\word -> includesAllUsed $ lettersWithPosition word) noUnused
     in
       if expectedLettersInPosition == "....." then {- noUnusedAndHasAllUsed -}  noUnusedAndHasAllUsed
       else filter (\word -> hasAllInPosition word) noUnusedAndHasAllUsed
@@ -110,8 +110,9 @@ play words =
 haveOnlyUsed :: Array CodePoint -> Boolean
 haveOnlyUsed cps = not $ hasAnyUnused cps
 
-includesAllUsed :: Array CodePoint -> Boolean
-includesAllUsed cps = all (\letter -> elem letter cps) letters
+includesAllUsed :: Array (Tuple Int CodePoint) -> Boolean
+includesAllUsed tcps =
+  all (\lp -> (elem (snd lp) (map snd tcps)) && (not $ elem lp tcps)) lettersUsedWithPositions
 
 hasAnyUnused :: Array CodePoint -> Boolean
 hasAnyUnused cps =
