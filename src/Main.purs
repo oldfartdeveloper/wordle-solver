@@ -29,7 +29,7 @@ noLetterInThisPosition :: CodePoint
 noLetterInThisPosition = codePointFromChar '.'
 
 expectedLettersInPosition :: String
-expectedLettersInPosition = "....."
+expectedLettersInPosition = ".R.N."
 
 expectedLettersInPositionT :: Array (Tuple Int CodePoint)
 expectedLettersInPositionT = lettersWithPosition expectedLettersInPosition
@@ -56,10 +56,10 @@ attempts =
 lettersUsedWithPositions :: Array (Tuple Int CodePoint)
 lettersUsedWithPositions =
   map adjustLetterUsed
-    [ Tuple 5 'E'
-    , Tuple 4 'P'
-    , Tuple 2 'R'
-    , Tuple 3 'Y'
+    [  Tuple 2 'U'
+    -- , Tuple 4 'P'
+    -- , Tuple 2 'R'
+    -- , Tuple 3 'Y'
     ]
 
 -- Convert position from position to offset
