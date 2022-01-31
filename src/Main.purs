@@ -17,11 +17,31 @@ import Node.Encoding (Encoding(ASCII))
 import Node.FS.Sync (readTextFile)
 import Partial.Unsafe (unsafePartial)
 
+-- User fills in these parameters
+newtype UserInput = UserInput
+  { plays :: String -- Text of sequences of 5 letter words
+  , found :: String -- Characters in positions in the answer word
+  , other :: Array (Tuple Int Char)
+  }
+
+-- The template for user input
+userInput :: UserInput
+userInput = UserInput
+  { plays:
+      """
+      """
+  , found: "....."
+  , other:
+      [
+      ]
+  }
+
 noLetterInThisPosition :: CodePoint
 noLetterInThisPosition = codePointFromChar '.'
 
 expectedLettersInPosition :: String
-expectedLettersInPosition = "....."
+expectedLettersInPosition =
+  let UserInput u = userInput in u.found
 
 expectedLettersInPositionT :: Array (Tuple Int CodePoint)
 expectedLettersInPositionT = lettersWithPosition expectedLettersInPosition
@@ -32,18 +52,13 @@ lettersWithPosition word =
 
 attempts :: Array String
 attempts =
-  filter (not null) $ map trim $ lines
-    """
-    """
+  filter (not null) $ map trim $ lines $ let UserInput u = userInput in u.plays
 
 -- Letters used but whose position in the answer isn't yet known.
 -- The position specfied indicates that it specifically can't be that one.
 lettersUsedWithPositions :: Array (Tuple Int CodePoint)
 lettersUsedWithPositions =
-  map adjustLetterUsed
-    [ -- Tuple 2 'U'
-    -- , Tuple 2 'W'
-    ]
+  map adjustLetterUsed $ let UserInput u = userInput in u.other
 
 -- Convert position from position to offset
 -- and letter from char to code point
