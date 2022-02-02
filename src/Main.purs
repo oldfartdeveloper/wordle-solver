@@ -2,7 +2,7 @@ module Main where
 
 import Prelude
 
-import Data.Array (all, filter, index, mapWithIndex, nub)
+import Data.Array ((:), all, filter, index, length, mapWithIndex, nub, take)
 import Data.CodePoint.Unicode (isLetter)
 import Data.Foldable (any, elem)
 import Data.Maybe (Maybe, fromJust)
@@ -77,6 +77,10 @@ letters =
   lettersUsed <>
     (filter (\t -> isLetter t) $ map snd $ expectedLettersInPositionT)
 
+arrangeWordsInMatrix :: Int -> Int -> Array String -> Array String
+arrangeWordsInMatrix width height words =
+  ("Line count: " <> (show $ length words)) : ("" : take 10 words)
+
 main :: Effect Unit
 main = do
   str <- readTextFile ASCII "doc/words5.txt"
@@ -84,7 +88,7 @@ main = do
 
 play :: Array String -> String
 play words =
-  joinWith "\n" $
+  joinWith "\n" $ arrangeWordsInMatrix 1 1
     let
       noUnused =
         filter
